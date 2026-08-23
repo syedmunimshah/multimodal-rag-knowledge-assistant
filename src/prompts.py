@@ -12,7 +12,7 @@ Return one sub-query per line, nothing else."""
 ANSWER_PROMPT = """Answer the question using ONLY the context below. If the context
 does not contain the answer, say so explicitly instead of guessing.
 
-Cite sources inline as [source:page] or [source] for images.
+Cite sources inline as [source:page].
 
 Context:
 {context}
