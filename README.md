@@ -1,10 +1,10 @@
-# Multimodal RAG Knowledge Assistant
+# RAG Knowledge Assistant
 
-An intelligent document assistant that answers questions over a mixed
-knowledge base of PDFs and images. Retrieval runs on **pgvector** semantic
-search; answering runs through a **LangGraph** multi-step reasoning pipeline
-that plans sub-queries, retrieves, grades sufficiency, and refines before
-answering — instead of a single embed-and-stuff RAG call.
+An intelligent document assistant that answers questions over a PDF
+knowledge base. Retrieval runs on **pgvector** semantic search; answering
+runs through a **LangGraph** multi-step reasoning pipeline that plans
+sub-queries, retrieves, grades sufficiency, and refines before answering —
+instead of a single embed-and-stuff RAG call.
 
 ## How it works
 
@@ -26,13 +26,10 @@ question
 5. **answer** — once sufficient (or the hop budget is spent), the model
    answers strictly from the retrieved context, citing `[source:page]`.
 
-### Multimodal ingestion
+### Ingestion
 
-- PDFs are parsed page-by-page and chunked (`RecursiveCharacterTextSplitter`).
-- Images are captioned by a vision-capable chat model at ingest time; the
-  caption is what gets embedded. This keeps both modalities in a single
-  text-embedding space so a query can retrieve either without a separate
-  image index.
+PDFs are parsed page-by-page and chunked (`RecursiveCharacterTextSplitter`)
+before being embedded and stored in pgvector.
 
 ### Context engineering
 
@@ -58,7 +55,7 @@ CREATE EXTENSION IF NOT EXISTS vector;
 ## Usage
 
 ```bash
-# Ingest a folder of PDFs/images (or a single file)
+# Ingest a folder of PDFs (or a single file)
 python -m src.ingest ./data/sample_docs
 
 # Ask questions interactively
@@ -77,6 +74,6 @@ pytest
 - **LangChain** — document loaders, text splitting, embeddings/chat model wrappers
 - **LangGraph** — the plan → retrieve → grade → refine → answer state machine
 - **pgvector** (via `langchain-postgres`) — Postgres-native vector similarity search
-- **OpenAI API** — chat, vision captioning, and embedding models (swappable via `.env`)
+- **OpenAI API** — chat and embedding models (swappable via `.env`)
 - **pypdf** — PDF text extraction
 - **pytest** — unit tests
