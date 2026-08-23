@@ -2,7 +2,7 @@ from src.graph import ask
 
 
 def main() -> None:
-    print("Multimodal RAG Knowledge Assistant — type 'exit' to quit.\n")
+    print("RAG Knowledge Assistant — type 'exit' to quit.\n")
     while True:
         question = input("You: ").strip()
         if question.lower() in {"exit", "quit"}:
