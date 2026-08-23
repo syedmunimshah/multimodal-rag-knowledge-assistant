@@ -1,4 +1,4 @@
-# Understanding the Multimodal RAG Knowledge Assistant
+# Understanding the RAG Knowledge Assistant
 
 This document walks through what this project is and how it works, the way
 it was actually understood — starting from the plain question "what does
@@ -7,20 +7,16 @@ clear picture.
 
 ## What is this project?
 
-It's an assistant that answers questions about your own documents — PDFs
-and images — instead of relying on general knowledge the way a normal
-chatbot does. You give it a folder of documents once; after that, anyone
-can ask it a question in plain English and get an answer that's actually
-grounded in those documents, with the source cited.
+It's an assistant that answers questions about your own PDF documents —
+instead of relying on general knowledge the way a normal chatbot does. You
+give it a folder of PDFs once; after that, anyone can ask it a question in
+plain English and get an answer that's actually grounded in those
+documents, with the source cited.
 
-Two things make it more than a basic "chat with your PDF" tool:
-
-1. It's **multimodal** — it doesn't just read PDFs, it also understands
-   images (charts, screenshots, scanned pages) by having a vision model
-   describe them first.
-2. It doesn't just search once and answer. It reasons in multiple steps —
-   plans, retrieves, checks whether it actually has enough to answer, and
-   goes back for more if it doesn't.
+What makes it more than a basic "chat with your PDF" tool is that it
+doesn't just search once and answer. It reasons in multiple steps — plans,
+retrieves, checks whether it actually has enough to answer, and goes back
+for more if it doesn't.
 
 ## How the documents get in — ingestion
 
@@ -29,13 +25,9 @@ Before any question can be answered, the documents have to be prepared:
 - A PDF is read page by page and cut into small overlapping chunks of text
   (~1000 characters each). Overlap matters — without it, a sentence that
   falls right on a chunk boundary would get cut in half and lose meaning.
-- An image is shown to a vision-capable model, which writes a factual
-  description of it — what text is visible, what a chart shows, what
-  objects appear. That description is what actually gets used, not the
-  raw pixels.
-- Every chunk (from a PDF) or caption (from an image) is converted into an
-  **embedding** — a list of numbers that represents its meaning — and saved
-  into a Postgres database with the **pgvector** extension.
+- Every chunk is converted into an **embedding** — a list of numbers that
+  represents its meaning — and saved into a Postgres database with the
+  **pgvector** extension.
 
 This only happens once per document, when it's ingested.
 
@@ -77,7 +69,7 @@ no way to know about it — it will say so rather than guess.
 
 Always text. The two flows are separate and don't mix:
 
-- **Ingest**: a PDF or image goes in, and becomes searchable knowledge.
+- **Ingest**: a PDF goes in, and becomes searchable knowledge.
 - **Query**: a text question goes in, and gets answered from that
   knowledge.
 
@@ -112,8 +104,8 @@ question
 
 ## Summary
 
-- The assistant reads a fixed set of documents (PDFs and images) once and
-  builds a searchable, meaning-based index of them (pgvector).
+- The assistant reads a fixed set of PDF documents once and builds a
+  searchable, meaning-based index of them (pgvector).
 - Every question is compared against that index only — never against the
   open internet — using vector similarity.
 - Documents and questions are both turned into embeddings, but at different
@@ -129,8 +121,7 @@ question
 
 This project demonstrates a retrieval system that stays grounded in a
 specific, controlled knowledge base rather than in an LLM's general
-training or the open internet — and it does so across two input types
-(text and images) using one shared reasoning pipeline. The multi-step
-plan → retrieve → grade → refine → answer loop is what separates it from a
-basic "embed and answer" RAG setup: the system checks its own work before
-answering instead of assuming one retrieval pass was enough.
+training or the open internet. The multi-step plan → retrieve → grade →
+refine → answer loop is what separates it from a basic "embed and answer"
+RAG setup: the system checks its own work before answering instead of
+assuming one retrieval pass was enough.
