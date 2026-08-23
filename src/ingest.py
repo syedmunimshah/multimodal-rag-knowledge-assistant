@@ -3,19 +3,13 @@ from pathlib import Path
 
 from langchain_core.documents import Document
 
-from src.loaders.image_loader import load_image
 from src.loaders.pdf_loader import load_pdf
 from src.vectorstore import get_vectorstore
 
-IMAGE_EXTS = {".png", ".jpg", ".jpeg", ".webp"}
-
 
 def load_file(file_path: Path) -> list[Document]:
-    suffix = file_path.suffix.lower()
-    if suffix == ".pdf":
+    if file_path.suffix.lower() == ".pdf":
         return load_pdf(file_path)
-    if suffix in IMAGE_EXTS:
-        return load_image(file_path)
     return []
 
 

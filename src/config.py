@@ -14,7 +14,6 @@ class Settings:
 
     chat_model: str = os.getenv("CHAT_MODEL", "gpt-4o-mini")
     embedding_model: str = os.getenv("EMBEDDING_MODEL", "text-embedding-3-small")
-    vision_model: str = os.getenv("VISION_MODEL", "gpt-4o-mini")
 
     chunk_size: int = int(os.getenv("CHUNK_SIZE", "1000"))
     chunk_overlap: int = int(os.getenv("CHUNK_OVERLAP", "150"))

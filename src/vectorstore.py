@@ -12,8 +12,6 @@ def get_embeddings() -> OpenAIEmbeddings:
 
 
 def get_vectorstore() -> PGVector:
-    """pgvector-backed store. Same collection holds both text-chunk and
-    image-caption documents, distinguished by metadata['modality']."""
     return PGVector(
         embeddings=get_embeddings(),
         collection_name=settings.pg_collection_name,

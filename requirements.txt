@@ -5,6 +5,5 @@ langchain-postgres==0.0.12
 langgraph==0.2.60
 psycopg[binary]==3.2.3
 pypdf==5.1.0
-pillow==11.0.0
 python-dotenv==1.0.1
 tiktoken==0.8.0
